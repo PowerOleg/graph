@@ -16,25 +16,41 @@ void copy_graph(char** two_dim_arr_source, char** two_dim_arr_target, const int 
     }
 }
 
-int** create_graph(int rows, int cols)
+int** create_graph(int* rows)
 {
-    int** two_dimensional_array = new int* [rows];
-    for (int i = 0; i < rows; i++)
+    int arr_index = 0;
+    int line;
+    std::ifstream in("input.txt");
+    if (!in.is_open())
     {
-        two_dimensional_array[i] = new int[cols];
+        printf("The file is not opened");
+        return nullptr;
     }
 
+    in >> *rows;
+    int columns = *rows;
+    int** two_dimensional_array = new int* [*rows];
+    for (size_t i = 0; i < *rows; i++)
+    {
+        two_dimensional_array[i] = new int[columns] {};
+        for (size_t j = 0; j < columns; j++)
+        {
+            in >> line;
+            two_dimensional_array[i][j] = line;
+            if (in.eof() && j < columns - 1)
+            {
+                printf("The reading has finished at i = %d, j = %d\n", i, j);
+            }
+        }
+    }
+    in.close();
+    /*while (!(in >> line).eof())
+    {
+        lines[arr_index++] = line;
+    }
+    lines[arr_index++] = line;
+    in.close();*/
     return two_dimensional_array;
-}
-
-void init_graph(char** two_dim_arr, int** coordiantes, int rows)
-{
-    for (int i = 0; i < rows; i++)
-    {
-        int rows = coordiantes[i][0];
-        int cols = coordiantes[i][1];
-        two_dim_arr[rows][cols] = '*';
-    }
 }
 
 void print_graph(int** two_dim_arr, int rows, int cols)
@@ -61,31 +77,15 @@ void delete_graph(int** two_dim_arr, int rows)
 int main(int argc, char** argv)
 {
     setlocale(LC_ALL, "ru");
-    int rows = 7;
-    int columns = rows;
-
-    int arr_index = 0;
-    std::string line;
-    std::string* lines = new std::string[rows];
-    std::ifstream read_file("input.txt");
-    while (std::getline(read_file, line)) {
-        //rows = line;
-        std::stringstream in(line);
-        in >> rows;
-        
-        for (size_t i = 0; i < rows - 1; i++)
-        {
-            
-            std::getline(in, lines[arr_index++], ' ');
-            
-        }
-        //std::getline(in, lines[arr_index++], '\n');
-
+    int rows = 0;
+    int** graph = create_graph(&rows);
+    if (graph == NULL)
+    {
+        printf("Error creating the graph");
+        return 1;
     }
-    read_file.close();
-    int** graph = create_graph(rows, columns);
-    //init
-    delete[] lines;
+    print_graph(graph, rows, rows);
+    
 
 
 
