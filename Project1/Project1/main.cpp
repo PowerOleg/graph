@@ -23,7 +23,7 @@ int** create_graph(int* rows)
     std::ifstream in("input.txt");
     if (!in.is_open())
     {
-        printf("The file is not opened");
+        printf("File is not opened");
         return nullptr;
     }
 
@@ -39,7 +39,7 @@ int** create_graph(int* rows)
             two_dimensional_array[i][j] = line;
             if (in.eof() && j < columns - 1)
             {
-                printf("The reading has finished at i = %d, j = %d\n", i, j);
+                printf("Reading has finished at i = %d, j = %d\n", i, j);
             }
         }
     }
@@ -72,6 +72,32 @@ void delete_graph(int** two_dim_arr, int rows)
         delete[] two_dim_arr[i];
     }
     delete[] two_dim_arr;
+}
+
+void dfs(int** graph, int v, bool *&visited)
+{
+
+}
+
+void dfs(int** graph, int rows)
+{
+    int v = rows;
+    bool* visited = new bool[v]{};
+    for (size_t i = 0; i < v; i++)
+    {
+        if (graph[v] == false)
+        {
+            dfs(graph, v, visited);
+        }
+    }
+   
+
+
+
+
+        /*for v из вершины(graph)
+            if не visited[v]
+                dfs(graph, v, visited)*/
 }
 
 int main(int argc, char** argv)
