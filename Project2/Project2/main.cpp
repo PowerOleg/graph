@@ -2,19 +2,12 @@
 #include <fstream>
 #include <sstream> 
 #include <string>
+#include <queue>
 
 #if(MSVC)
 addcompileoptions("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 addcompileoptions("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 #endif()
-
-void copy_graph(char** two_dim_arr_source, char** two_dim_arr_target, const int rows, const int columns)
-{
-    for (int i = 0; i < rows; i++)
-    {
-        std::copy_n(two_dim_arr_source[i], columns, two_dim_arr_target[i]);
-    }
-}
 
 int** create_graph(int* rows)
 {
@@ -74,7 +67,7 @@ void delete_graph(int** two_dim_arr, int rows)
     delete[] two_dim_arr;
 }
 
-void dfs(int** graph, int vertex_index, bool*& visited, int v)
+void dfs_deep(int** graph, int vertex_index, bool*& visited, int v)
 {
     printf("%d ", vertex_index + 1);
     visited[vertex_index] = true;
@@ -83,19 +76,65 @@ void dfs(int** graph, int vertex_index, bool*& visited, int v)
     {
         if (graph[vertex_index][i] == true && visited[i] == false)
         {
-            dfs(graph, i, visited, v);
+            dfs_deep(graph, i, visited, v);
         }
     }
 }
 
-void dfs(int** graph, int v)
+void dfs_deep(int** graph, int v)
 {
     bool* visited = new bool[v] {};
     for (size_t i = 0; i < v; i++)
     {
         if (visited[i] == false)
         {
-            dfs(graph, i, visited, v);
+            dfs_deep(graph, i, visited, v);
+        }
+    }
+    delete[] visited;
+}
+
+void bfs(int** graph, int vertex_index, bool*& visited, int v)
+{
+    printf("%d ", vertex_index + 1);
+    visited[vertex_index] = true;
+    std::queue<int> queue;
+    for (size_t i = 0; i < v; i++)
+    {
+        if (graph[vertex_index][i] == true && visited[i] == false)
+        {
+            queue.push(i);
+        }
+    }
+    
+    while (!queue.empty())
+    {
+        int index = queue.front();
+        queue.pop();
+        if (visited[index] == true)
+        {
+            continue;
+        }
+        printf("%d ", index + 1);
+        visited[index] = true;
+        for (size_t i = 0; i < v; i++)
+        {
+            if (graph[index][i] == true && visited[i] == false)
+            {
+                queue.push(i);
+            }
+        }
+    }
+}
+
+void bfs(int** graph, int v)
+{
+    bool* visited = new bool[v] {};
+    for (size_t i = 0; i < v; i++)
+    {
+        if (visited[i] == false)
+        {
+            bfs(graph, i, visited, v);
         }
     }
     delete[] visited;
@@ -111,8 +150,8 @@ int main(int argc, char** argv)
         printf("Error creating the graph");
         return 1;
     }
-    printf("Порядок обхода вершин: ");
-    dfs(graph, rows);
+    printf("Порядок обхода вершин в ширину: ");
+    bfs(graph, rows);
     delete_graph(graph, rows);
     return 0;
 }
