@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream> 
 #include <string>
+#include <vector>
 
 /*#if(MSVC)
 addcompileoptions("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -74,30 +75,54 @@ void delete_graph(int** two_dim_arr, int rows)
     delete[] two_dim_arr;
 }
 
-void dfs(int** graph, int v, bool *&visited)
+void dfs(int** graph, int vertex_index, bool *&visited, int v)
 {
+    printf("%d ", vertex_index + 1);
+    visited[vertex_index] = true;
+    //std::vector<int> close_vertexes;
 
-}
-
-void dfs(int** graph, int rows)
-{
-    int v = rows;
-    bool* visited = new bool[v]{};
     for (size_t i = 0; i < v; i++)
     {
-        if (graph[v] == false)
+        if (graph[0][i] == true)
         {
-            dfs(graph, v, visited);
+            dfs(graph, i, visited, v);
         }
     }
+
    
 
 
+   /* for (size_t i = 0; i < v; i++)
+    {
+        if (graph[0][i] == true)
+        {
+            close_vertexes.push_back(i);
+        }
+    }
 
+    for (size_t i = 0; i < close_vertexes.size(); i++)
+    {
+        if (visited[close_vertexes[i]] == false)
+        {
+            dfs(graph, close_vertexes[i], visited, v);
+        }
+        
+    }*/
 
-        /*for v из вершины(graph)
-            if не visited[v]
-                dfs(graph, v, visited)*/
+}
+
+void dfs(int** graph, int v)
+{
+    bool* visited = new bool[v]{};
+    for (size_t i = 0; i < v; i++)
+    {
+        if (visited[i] == false)
+        {
+            dfs(graph, i, visited, v);
+        }
+    }
+
+    delete[] visited;
 }
 
 int main(int argc, char** argv)
@@ -111,7 +136,7 @@ int main(int argc, char** argv)
         return 1;
     }
     print_graph(graph, rows, rows);
-    
+    dfs(graph, rows);
 
 
 
