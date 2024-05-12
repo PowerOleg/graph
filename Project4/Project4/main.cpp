@@ -13,7 +13,7 @@ int** create_graph(int* rows)
 {
     int arr_index = 0;
     int line;
-    std::ifstream in("input.txt");
+    std::ifstream in("input2.txt");
     if (!in.is_open())
     {
         printf("File is not opened");
@@ -180,28 +180,40 @@ void is_cyclic(int** graph, int v)
     printf("No cycles");
 }
 
-
-dfs_find_components(int** graph, int vertex_index, cids, cid)
+//cids - массив; cid - номер для различия одних компонентов связности от других(number to define a cycle from others)
+void dfs_find_components(int** graph, int vertex_index, int *&cids, int cid, int v)
 {
-
-
-    /*cids[vertex] = cid
-    for v из смежные(vertex)
-        if cids[v] = 0
-            dfs(graph, v, visited, cid)*/
+    cids[vertex_index] = cid;
+    for (size_t i = 0; i < v; i++)
+    {
+        if (graph[vertex_index][i] == true && cids[i] == 0)
+        {
+            dfs_find_components(graph, i, cids, cid, v);
+        }
+    }
 }
     
-
 void find_components(int** graph, int v)
 {
+    int* cids = new int[v]{};
+    int cid = 1;
+    for (size_t i = 0; i < v; i++)
+    {
+        if (cids[i] == 0)
+        {
+            dfs_find_components(graph, i, cids, cid, v);
+            cid++;
+        }
+    }
+    //printf("Result:\n");
+    for (size_t i = 0; i < v; i++)
+    {
+        printf("%d - %d\n", (i + 1), cids[i]);
+    }
 
-
-            /*cids = [V раз 0]
-            cid = 1
-            for v из вершины(graph)
-                if cids[v] = 0
-                    dfs(graph, v, cids, cid)
-                    cid += 1*/
+    //How many different components
+    printf("Количество компонентов связности в графе: %d", cid - 1);
+    delete[] cids;
 }
             
 
@@ -215,7 +227,7 @@ int main(int argc, char** argv)
         printf("Error creating the graph");
         return 1;
     }
-    printf("Принадлежность вершин компонентам связности: ");
+    printf("Принадлежность вершин компонентам связности:\n");
     find_components(graph, rows);
     delete_graph(graph, rows);
     return 0;
