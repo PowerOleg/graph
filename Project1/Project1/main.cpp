@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream> 
 #include <string>
-#include <vector>
 
 /*#if(MSVC)
 addcompileoptions("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -79,36 +78,14 @@ void dfs(int** graph, int vertex_index, bool *&visited, int v)
 {
     printf("%d ", vertex_index + 1);
     visited[vertex_index] = true;
-    //std::vector<int> close_vertexes;
 
     for (size_t i = 0; i < v; i++)
     {
-        if (graph[0][i] == true)
+        if (graph[vertex_index][i] == true && visited[i] == false)
         {
             dfs(graph, i, visited, v);
         }
     }
-
-   
-
-
-   /* for (size_t i = 0; i < v; i++)
-    {
-        if (graph[0][i] == true)
-        {
-            close_vertexes.push_back(i);
-        }
-    }
-
-    for (size_t i = 0; i < close_vertexes.size(); i++)
-    {
-        if (visited[close_vertexes[i]] == false)
-        {
-            dfs(graph, close_vertexes[i], visited, v);
-        }
-        
-    }*/
-
 }
 
 void dfs(int** graph, int v)
@@ -121,7 +98,6 @@ void dfs(int** graph, int v)
             dfs(graph, i, visited, v);
         }
     }
-
     delete[] visited;
 }
 
@@ -135,11 +111,8 @@ int main(int argc, char** argv)
         printf("Error creating the graph");
         return 1;
     }
-    print_graph(graph, rows, rows);
+    printf("Порядок обхода вершин: ");
     dfs(graph, rows);
-
-
-
     delete_graph(graph, rows);
 	return 0;
 }
